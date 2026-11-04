@@ -35,6 +35,11 @@ __pycache__/
 *.userosscache
 *.sln.docstates
 
+# 6. Binary Executables and Deprecated Script Formats (Excluded to prevent WDAC / Smart App Control triggers)
+*.exe
+*.vbs
+*.cs
+
 # ==============================================================================
 # Whitelist: Ensure all essential presentation assets are ALWAYS tracked
 # ==============================================================================
@@ -53,9 +58,6 @@ __pycache__/
 !*.woff2
 !*.otf
 !*.bat
-!*.vbs
 !*.ps1
-!*.cs
-!*.exe
 !README.md
 !Gold Training_29.10.26.pptx

@@ -1,10 +1,7 @@
 # Pothys Swarna Mahal - Gold Training Program
-# Portable Zero-Dependency Loopback Web Server with Byte-Range Video Streaming
+# Clean Loopback Web Server (Zero Add-Type, Fully Portable, WDAC-Safe)
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
 
 # Determine base directory reliably
 $baseDir = $PSScriptRoot
@@ -27,46 +24,29 @@ $indexPath = Join-Path $baseDir "index.html"
 $slidesDir = Join-Path $baseDir "slides"
 
 if (-not (Test-Path $indexPath) -or -not (Test-Path $slidesDir)) {
-    [System.Windows.Forms.MessageBox]::Show(
-        "Gold Presentation files could not be found in:`n$baseDir`n`nPlease ensure all presentation files are in this folder.",
-        "Pothys Swarna Mahal - Startup Error",
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Error
-    ) | Out-Null
+    Write-Error "Gold Presentation files could not be found in: $baseDir"
     exit 1
 }
 
-# 2. Prevent duplicate servers / single-instance mutex
-$mutexName = "Local\PothysSwarnaMahalGoldPresentationMutex"
-$createdNew = $false
-$mutex = $null
-
-try {
-    $mutex = New-Object System.Threading.Mutex($true, $mutexName, [ref]$createdNew)
-} catch {
-    $createdNew = $true
-}
-
+# 2. Port auto-detection & Single-instance check
 $portFile = Join-Path $env:TEMP "psm_gold_presentation_port.txt"
 
-if (-not $createdNew) {
-    if (Test-Path $portFile) {
-        try {
-            $existingPort = [int]((Get-Content $portFile -ErrorAction Stop).Trim())
-            $testClient = New-Object System.Net.Sockets.TcpClient
-            $ar = $testClient.BeginConnect([System.Net.IPAddress]::Loopback, $existingPort, $null, $null)
-            if ($ar.AsyncWaitHandle.WaitOne(300) -and $testClient.Connected) {
-                $testClient.Close()
-                Start-Process "http://127.0.0.1:$existingPort/index.html"
-                exit 0
-            }
+# Check if an existing server is already active
+if (Test-Path $portFile) {
+    try {
+        $existingPort = [int]((Get-Content $portFile -ErrorAction Stop).Trim())
+        $testClient = New-Object System.Net.Sockets.TcpClient
+        $ar = $testClient.BeginConnect([System.Net.IPAddress]::Loopback, $existingPort, $null, $null)
+        if ($ar.AsyncWaitHandle.WaitOne(300) -and $testClient.Connected) {
             $testClient.Close()
-        } catch {}
-    }
+            # Server is already alive and running on this port
+            exit 0
+        }
+        $testClient.Close()
+    } catch {}
 }
 
-# 3. Port auto-detection
-$candidatePorts = @(8000, 8080, 8085, 8090, 8100, 8200, 8888, 3000, 5000, 5500, 9000)
+$candidatePorts = @(8080, 8000, 8085, 8090, 8100, 8200, 8888, 3000, 5000, 5500, 9000)
 $listener = $null
 $selectedPort = 0
 
@@ -81,14 +61,20 @@ foreach ($p in $candidatePorts) {
 }
 
 if ($null -eq $listener) {
-    $listener = New-Object System.Net.Sockets.TcpListener([System.Net.IPAddress]::Loopback, 0)
-    $listener.Start()
-    $selectedPort = $listener.LocalEndpoint.Port
+    try {
+        $listener = New-Object System.Net.Sockets.TcpListener([System.Net.IPAddress]::Loopback, 0)
+        $listener.Start()
+        $selectedPort = $listener.LocalEndpoint.Port
+    } catch {
+        Write-Error "Failed to bind to any loopback port."
+        exit 2
+    }
 }
 
+# Save selected port for the launcher
 Set-Content -Path $portFile -Value $selectedPort -Force
 
-# 4. MIME Types Mapping
+# 3. MIME Types Mapping
 $mimeTypes = @{
     ".html" = "text/html; charset=utf-8"
     ".htm"  = "text/html; charset=utf-8"
@@ -109,72 +95,7 @@ $mimeTypes = @{
     ".webp" = "image/webp"
 }
 
-# 5. Tray Icon & Presentation URL Setup
-$presentationUrl = "http://127.0.0.1:$selectedPort/index.html"
-
-$trayIcon = $null
-try {
-    $iconPath = Join-Path $baseDir "app.ico"
-    $icon = $null
-    if (Test-Path $iconPath) {
-        try { $icon = New-Object System.Drawing.Icon($iconPath) } catch {}
-    }
-    if ($null -eq $icon) {
-        $icon = [System.Drawing.SystemIcons]::Application
-    }
-
-    $trayIcon = New-Object System.Windows.Forms.NotifyIcon
-    $trayIcon.Icon = $icon
-    $trayIcon.Text = "Gold Training Presentation (Port $selectedPort)"
-    $trayIcon.Visible = $true
-
-    $contextMenu = New-Object System.Windows.Forms.ContextMenu
-
-    $titleItem = New-Object System.Windows.Forms.MenuItem("Gold Presentation (Running)")
-    $titleItem.Enabled = $false
-    $contextMenu.MenuItems.Add($titleItem) | Out-Null
-
-    $portItem = New-Object System.Windows.Forms.MenuItem("Port: $selectedPort")
-    $portItem.Enabled = $false
-    $contextMenu.MenuItems.Add($portItem) | Out-Null
-
-    $contextMenu.MenuItems.Add("-") | Out-Null
-
-    $openItem = New-Object System.Windows.Forms.MenuItem("Open in Browser", {
-        Start-Process $presentationUrl
-    })
-    $contextMenu.MenuItems.Add($openItem) | Out-Null
-
-    $contextMenu.MenuItems.Add("-") | Out-Null
-
-    $exitItem = New-Object System.Windows.Forms.MenuItem("Exit Presentation", {
-        $script:isRunning = $false
-    })
-    $contextMenu.MenuItems.Add($exitItem) | Out-Null
-
-    $trayIcon.ContextMenu = $contextMenu
-    $trayIcon.add_DoubleClick({
-        Start-Process $presentationUrl
-    })
-
-    $trayIcon.ShowBalloonTip(
-        3000,
-        "Gold Training Presentation Ready",
-        "Serving presentation at $presentationUrl",
-        [System.Windows.Forms.ToolTipIcon]::Info
-    )
-} catch {}
-
-# 6. Verify socket listening readiness, then open browser
-try {
-    $checkClient = New-Object System.Net.Sockets.TcpClient
-    $ar = $checkClient.BeginConnect([System.Net.IPAddress]::Loopback, $selectedPort, $null, $null)
-    $null = $ar.AsyncWaitHandle.WaitOne(800)
-    $checkClient.Close()
-} catch {}
-Start-Process $presentationUrl
-
-# 7. Lifecycle Tracking
+# 4. Lifecycle Tracking
 $startTime = [DateTime]::UtcNow
 $lastHeartbeat = [DateTime]::UtcNow
 $hasReceivedHeartbeat = $false
@@ -192,8 +113,6 @@ function Send-StatusResponse($stream, $status, $msg) {
 $buffer = New-Object byte[] 8192
 
 while ($script:isRunning) {
-    [System.Windows.Forms.Application]::DoEvents()
-
     if ($listener.Pending()) {
         try {
             $client = $listener.AcceptTcpClient()
@@ -201,6 +120,7 @@ while ($script:isRunning) {
             $client.SendTimeout = 8000
             $stream = $client.GetStream()
 
+            # Wait briefly for client request data
             $waitIter = 0
             while (-not $stream.DataAvailable -and $waitIter -lt 25) {
                 [System.Threading.Thread]::Sleep(10)
@@ -341,7 +261,7 @@ while ($script:isRunning) {
         [System.Threading.Thread]::Sleep(30)
     }
 
-    # Watchdog Check
+    # Watchdog Check: auto shutdown 90s after tab close, or 120s if page never opened
     $now = [DateTime]::UtcNow
     if ($hasReceivedHeartbeat) {
         if (($now - $lastHeartbeat).TotalSeconds -gt 90) {
@@ -355,17 +275,5 @@ while ($script:isRunning) {
 }
 
 # Cleanup on exit
-if ($null -ne $trayIcon) {
-    try {
-        $trayIcon.Visible = $false
-        $trayIcon.Dispose()
-    } catch {}
-}
 try { $listener.Stop() } catch {}
 try { if (Test-Path $portFile) { Remove-Item $portFile -Force -ErrorAction SilentlyContinue } } catch {}
-if ($null -ne $mutex) {
-    try {
-        if ($createdNew) { $mutex.ReleaseMutex() }
-        $mutex.Dispose()
-    } catch {}
-}

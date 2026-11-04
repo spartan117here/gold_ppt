@@ -46,24 +46,26 @@ The application preserves the royal visual identity of **Pothys Swarna Mahal** (
 
 You do not need to install Node.js, Python, or Microsoft Office. The project runs out-of-the-box on any modern Windows machine:
 
-1. **Clone the repository:**
+1. **Clone or extract the repository:**
    ```bash
    git clone https://github.com/spartan117here/gold_ppt.git
    cd gold_ppt
    ```
 
 2. **Launch the presentation:**
-   Simply **double-click** any of the following launcher files:
-   - **`Launch_Presentation.bat`** (Recommended one-click batch launcher)
-   - **`Gold_Presentation_Portable\Launch_Presentation.exe`** (Native compiled Windows application with system tray icon)
-   - **`Gold_Presentation_Portable\Launch_Presentation.vbs`** (Silent background launcher without terminal window)
+   Simply **double-click**:
+   - **`Launch_Presentation.bat`** (Primary one-click batch launcher)
 
 3. **What happens automatically:**
    - The launcher starts a local zero-dependency loopback web server.
    - Automatically detects an open port (tries `8080`, `8000`, `8085`, etc.).
-   - Launches your default web browser directly to `http://127.0.0.1:<port>/index.html`.
-   - Runs silently in the background with a golden tray icon in your Windows notification area.
+   - Launches your default web browser directly to `http://localhost:<port>/index.html`.
+   - **Enterprise Security Policy Safe:** If your Windows computer has strict Windows Defender Application Control (WDAC), Smart App Control, or AppLocker enabled, the launcher detects restrictions and falls back safely to direct local browser presentation with zero errors.
    - Monitors an automated browser heartbeat and cleanly shuts down 90 seconds after closing the presentation tab.
+
+4. **How to Stop:**
+   - Double-click **`Stop_Presentation.bat`**, or
+   - Press any key in the launcher console window.
 
 ---
 
@@ -74,7 +76,7 @@ You do not need to install Node.js, Python, or Microsoft Office. The project run
 | **Presentation Shell** | HTML5, CSS3, ES6 JavaScript | 100% Bundled Locally |
 | **Typography** | Cinzel (Headings), Montserrat (Body) | Local TTF files in `fonts/` |
 | **Animation Engine** | GSAP 3.12, Flip.js, Custom 2D Canvas | Local scripts in root |
-| **Local Web Server** | PowerShell Loopback / C# HTTP Server | Native Windows components |
+| **Local Web Server** | PowerShell Loopback (Pure .NET Sockets) | Native Windows components |
 | **Video Playback** | HTML5 Native Video + HTTP 206 Streaming | Local MP4 in `media/` |
 
 ---
@@ -101,6 +103,7 @@ You do not need to install Node.js, Python, or Microsoft Office. The project run
 ```text
 gold_ppt/
 │── Launch_Presentation.bat         # Root shortcut launcher
+│── Stop_Presentation.bat           # Root shutdown utility
 │── README.md                       # Repository documentation
 │── .gitignore                      # Git exclusion rules
 │── .gitattributes                  # Git LFS attributes for media
@@ -112,11 +115,9 @@ gold_ppt/
 │   ├── style.css                   # Royal maroon & gold luxury styling
 │   ├── script.js                   # Presentation engine & silk transition
 │   ├── slides-manifest.js          # Complete 42-slide metadata specification
-│   ├── Launch_Presentation.bat     # Portable launcher batch file
-│   ├── Launch_Presentation.exe     # Native compiled C# launcher executable
-│   ├── Launch_Presentation.vbs     # Silent background launcher
+│   ├── Launch_Presentation.bat     # Primary launcher batch file
+│   ├── Stop_Presentation.bat       # Shutdown utility batch file
 │   ├── server.ps1                  # Loopback web server with HTTP 206 streaming
-│   ├── Launcher.cs                 # C# source for Launch_Presentation.exe
 │   ├── app.ico & favicon.ico       # Pothys brand icons
 │   ├── gsap.min.js & Flip.min.js   # Offline animation libraries
 │   ├── README.md                   # Portable folder user guide

@@ -6,20 +6,27 @@ Welcome to the **Pothys Swarna Mahal Gold Training Program Presentation**. This 
 ---
 
 ### 1. How to Launch
-To start the presentation, simply **double-click** either:
-- **`Launch_Presentation.bat`** (Recommended batch launcher), or
-- **`Launch_Presentation.exe`** (Native Windows executable with system tray icon), or
-- **`Launch_Presentation.vbs`** (Silent launcher without terminal window)
+To start the presentation, simply **double-click**:
+- **`Launch_Presentation.bat`** (Primary one-click launcher)
 
-The presentation will automatically start a local loopback web server and open your default browser to `http://127.0.0.1:<port>/index.html`.
+The launcher will automatically start the presentation server and open your default browser to `http://localhost:<port>/index.html`.
 
 > [!NOTE]
+> **Enterprise & Application Control Safe:** Designed to run cleanly even on Windows computers with strict Windows Defender Application Control (WDAC), Smart App Control, or AppLocker policies. Unsigned executables (.exe) and legacy VBScript files have been eliminated.
 > **No Internet Connection Required:** All images, fonts (Cinzel, Montserrat), GSAP libraries, and video assets are 100% bundled locally within this directory.
 > **No Python, Node.js, or PowerPoint Required:** Runs natively using standard Windows components.
 
 ---
 
-### 2. Presentation Controls & Navigation
+### 2. How to Stop
+To stop the presentation server:
+- Run **`Stop_Presentation.bat`**, or
+- Press any key in the `Launch_Presentation.bat` terminal window, or
+- Close your browser tab (the server will automatically shut down after 90 seconds of inactivity).
+
+---
+
+### 3. Presentation Controls & Navigation
 
 | Action | Control / Key |
 | :--- | :--- |
@@ -35,7 +42,7 @@ The presentation will automatically start a local loopback web server and open y
 
 ---
 
-### 3. Signature Features
+### 4. Signature Features
 
 1. **Combined Golden Particle Sweep & Royal Gold Silk Reveal Transition:**
    - Every slide navigation triggers a dynamic 60 FPS animation combining a flowing golden silk ribbon with glowing 24K gold particles flowing organically across the screen.
@@ -56,23 +63,18 @@ The presentation will automatically start a local loopback web server and open y
 5. **Slide Overview Grid (Modal Drawer):**
    - Press `M` anytime to view all 42 slides at a glance and jump directly to any slide.
 
-6. **Automatic Clean Shutdown:**
-   - The background presentation server monitors an automated heartbeat from your browser tab. Closing your browser tab cleanly exits the server within 90 seconds. You can also right-click the golden tray icon in your Windows taskbar and choose **Exit Presentation**.
-
 ---
 
-### 4. Folder Contents
+### 5. Folder Contents
 ```text
 Gold_Presentation_Portable/
 │── index.html                  # Main presentation shell
 │── style.css                   # Royal maroon & 24K gold styling
 │── script.js                   # Presentation engine & silk transition
 │── slides-manifest.js          # Complete 42-slide metadata & titles
-│── Launch_Presentation.bat     # One-click Windows batch launcher
-│── Launch_Presentation.exe     # Native compiled Windows launcher
-│── Launch_Presentation.vbs     # Silent background launcher
+│── Launch_Presentation.bat     # Primary one-click launcher
+│── Stop_Presentation.bat       # Clean shutdown utility
 │── server.ps1                  # Portable PowerShell server with byte-range streaming
-│── Launcher.cs                 # C# source code for Launcher.exe
 │── app.ico & favicon.ico       # Pothys branding icons
 │── gsap.min.js & Flip.min.js   # Offline animation libraries
 │── README.md                   # This instruction manual
@@ -83,4 +85,3 @@ Gold_Presentation_Portable/
 
 ---
 *Pothys Swarna Mahal — Idhu Paripooranathin Adayalam (A Mark of Perfection)*
-
