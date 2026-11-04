@@ -1,0 +1,61 @@
+# ==============================================================================
+# Pothys Swarna Mahal — Git Ignore Rules
+# ==============================================================================
+
+# 1. Archives (Excluded per user selection to keep repo fast and under 100MB limit)
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 2. Redundant Historical Backups
+*backup*.pptx
+*original*.pptx
+
+# 3. Temporary OS & Editor Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.tmp
+*.temp
+*.log
+*port.txt
+
+# 4. Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 5. IDE Configurations
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ==============================================================================
+# Whitelist: Ensure all essential presentation assets are ALWAYS tracked
+# ==============================================================================
+!*.html
+!*.css
+!*.js
+!*.json
+!*.png
+!*.jpg
+!*.jpeg
+!*.svg
+!*.ico
+!*.mp4
+!*.ttf
+!*.woff
+!*.woff2
+!*.otf
+!*.bat
+!*.vbs
+!*.ps1
+!*.cs
+!*.exe
+!README.md
+!Gold Training_29.10.26.pptx

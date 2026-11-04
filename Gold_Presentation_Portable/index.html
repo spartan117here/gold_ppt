@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Training Program — Pothys Swarna Mahal</title>
+    
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Premium Fonts: Local Offline First -->
+    <link rel="stylesheet" href="fonts/fonts.css">
+    
+    <!-- Presentation Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Main 16:9 Presentation Viewport -->
+    <main id="presentation-viewport">
+
+        <!-- 1. Active Static Slide Stage (100% native 1920x1080 sharpness) -->
+        <div class="slide-stage" id="slide-stage">
+            <img id="active-slide-img" class="slide-image" src="slides/slide_01.png" alt="Gold Training Program">
+            
+            <!-- Video Container for Slide 39 -->
+            <div id="video-wrapper" class="video-overlay" style="display: none;">
+                <video id="slide-video" playsinline preload="auto">
+                    <source src="media/slide 39 video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-controls-overlay" id="video-controls">
+                    <button class="v-btn play-pause-btn" id="v-play-btn" title="Play / Pause">
+                        <svg class="icon-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" style="display:none;"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                    </button>
+                    <div class="v-progress-container" id="v-seek-bar">
+                        <div class="v-progress-fill" id="v-seek-fill"></div>
+                    </div>
+                    <span class="v-time" id="v-time-display">0:00 / 0:00</span>
+                    <button class="v-btn mute-btn" id="v-mute-btn" title="Mute / Unmute">
+                        <svg class="icon-volume" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Dual Slide 3D Stage (Used during Golden Silk Transitions) -->
+        <div class="transition-stage" id="transition-stage" style="display: none;">
+            <div class="trans-card" id="trans-out">
+                <img class="slide-image" id="trans-out-img" src="" alt="Outgoing Slide">
+            </div>
+            <div class="trans-card" id="trans-in">
+                <img class="slide-image" id="trans-in-img" src="" alt="Incoming Slide">
+            </div>
+        </div>
+
+        <!-- 3. Royal Gold Silk & Particle Animation Canvas -->
+        <canvas id="fx-canvas"></canvas>
+
+        <!-- 4. Ambient Luxury Lighting Overlays -->
+        <div class="gold-ambient-sweep" id="gold-ambient"></div>
+        <div class="ambient-vignette"></div>
+
+        <!-- 5. Invisible Edge Navigation Zones -->
+        <nav class="nav-zone-left" id="nav-prev" aria-label="Previous Slide"></nav>
+        <nav class="nav-zone-right" id="nav-next" aria-label="Next Slide"></nav>
+
+        <!-- Slide Title Banner (Discreet Top-Left Badge) -->
+        <header class="slide-info-pill" id="slide-info-pill">
+            <span class="pill-chapter" id="pill-chapter">Opening & Brand Identity</span>
+            <span class="pill-sep">•</span>
+            <span class="pill-title" id="pill-title">GOLD TRAINING PROGRAM</span>
+        </header>
+
+        <!-- Navigation Arrow Buttons (Hover Visible) -->
+        <button class="nav-arrow-btn nav-arrow-left" id="arrow-prev" title="Previous Slide (Left Arrow / PageUp)">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="nav-arrow-btn nav-arrow-right" id="arrow-next" title="Next Slide (Right Arrow / Space / PageDown)">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+
+    </main>
+
+    <!-- Bottom Center Progress Bar & Counter -->
+    <aside class="bottom-counter-wrap" id="counter-wrap">
+        <div class="counter-progress-track" id="progress-track" title="Click to scrub slides">
+            <div class="counter-progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="slide-counter-badge" id="counter-badge" title="Click to view all slides (M)">
+            <span class="brand-swarna">POTHYS SWARNA MAHAL</span>
+            <span class="badge-divider">|</span>
+            <span class="curr" id="curr-num">1</span>
+            <span class="sep">/</span>
+            <span class="total">42</span>
+        </div>
+    </aside>
+
+    <!-- Top Right Controls (Fullscreen & Menu) -->
+    <div class="top-controls">
+        <button class="icon-btn" id="menuBtn" title="Slide Overview Grid (M)" aria-label="Toggle Slide Overview">
+            <svg viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+        </button>
+        <button class="icon-btn" id="fsBtn" title="Toggle Fullscreen (F)" aria-label="Toggle Fullscreen">
+            <svg class="fs-enter-svg" id="fs-enter-icon" viewBox="0 0 24 24">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+            <svg class="fs-exit-svg" id="fs-exit-icon" viewBox="0 0 24 24" style="display: none;">
+                <polyline points="4 14 10 14 10 20"></polyline>
+                <polyline points="20 10 14 10 14 4"></polyline>
+                <line x1="14" y1="10" x2="21" y2="3"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Slide Overview Grid Drawer (Modal) -->
+    <div class="slide-drawer" id="slide-drawer" style="display: none;">
+        <div class="drawer-header">
+            <div class="drawer-title">
+                <h2>POTHYS SWARNA MAHAL</h2>
+                <p>GOLD TRAINING PROGRAM — ALL 42 SLIDES</p>
+            </div>
+            <button class="drawer-close-btn" id="drawer-close">&times;</button>
+        </div>
+        <div class="drawer-grid" id="drawer-grid"></div>
+    </div>
+
+    <!-- Offline Vendor Libraries -->
+    <script src="gsap.min.js"></script>
+    <script src="Flip.min.js"></script>
+
+    <!-- Presentation Engine & Manifest -->
+    <script src="slides-manifest.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
+
