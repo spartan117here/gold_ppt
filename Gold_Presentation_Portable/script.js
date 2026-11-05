@@ -16,7 +16,6 @@
     let animDirection = 1; // 1 for next, -1 for prev
     let targetSlideIndex = 0;
     let rafId = null;
-    let isDrawerOpen = false;
 
     const slides = window.SLIDES_MANIFEST || [];
     const totalSlides = slides.length;
@@ -32,23 +31,11 @@
     const fxCanvas = document.getElementById('fx-canvas');
     const fxCtx = fxCanvas.getContext('2d');
 
-    // Controls & Overlays
+    // Controls & Overlays (ONLY Bottom Counter & Top-Right Fullscreen)
     const currNumEl = document.getElementById('curr-num');
-    const progressFill = document.getElementById('progress-fill');
-    const progressTrack = document.getElementById('progress-track');
-    const pillChapter = document.getElementById('pill-chapter');
-    const pillTitle = document.getElementById('pill-title');
     const fsBtn = document.getElementById('fsBtn');
     const fsEnterIcon = document.getElementById('fs-enter-icon');
     const fsExitIcon = document.getElementById('fs-exit-icon');
-    const menuBtn = document.getElementById('menuBtn');
-    const slideDrawer = document.getElementById('slide-drawer');
-    const drawerClose = document.getElementById('drawer-close');
-    const drawerGrid = document.getElementById('drawer-grid');
-    const navPrev = document.getElementById('nav-prev');
-    const navNext = document.getElementById('nav-next');
-    const arrowPrev = document.getElementById('arrow-prev');
-    const arrowNext = document.getElementById('arrow-next');
 
     // Video Elements (Slide 39)
     const videoWrapper = document.getElementById('video-wrapper');
@@ -391,12 +378,6 @@
             if (slideVideo) slideVideo.pause();
         }
 
-        // Update Pill Info
-        updateSlideInfoPill(currentIndex);
-
-        // Update Drawer Active Item
-        updateDrawerActiveState(currentIndex);
-
         isAnimating = false;
     }
 
@@ -476,13 +457,10 @@
     }
 
     // =========================================================================
-    // UI Helpers: Counter, Pill, Fullscreen, Drawer
+    // UI Helpers: Counter & Fullscreen
     // =========================================================================
-    function updateCounter(index, animate = true) {
+    function updateCounter(index) {
         const targetNum = index + 1;
-        const targetPercent = (targetNum / totalSlides) * 100;
-
-        if (progressFill) progressFill.style.width = `${targetPercent}%`;
         if (currNumEl) currNumEl.textContent = targetNum;
 
         // Hash sync without history pollution
@@ -491,12 +469,6 @@
                 history.replaceState(null, null, `#slide-${targetNum}`);
             }
         } catch (e) {}
-    }
-
-    function updateSlideInfoPill(index) {
-        const s = slides[index];
-        if (pillChapter) pillChapter.textContent = s.chapter || 'Pothys Swarna Mahal';
-        if (pillTitle) pillTitle.textContent = s.title || `Slide ${index + 1}`;
     }
 
     function toggleFullscreen() {
@@ -516,54 +488,6 @@
         if (fsExitIcon) fsExitIcon.style.display = isFS ? 'block' : 'none';
     }
 
-    function toggleDrawer(open) {
-        if (open === undefined) open = !isDrawerOpen;
-        isDrawerOpen = open;
-        if (slideDrawer) {
-            slideDrawer.style.display = isDrawerOpen ? 'flex' : 'none';
-            if (isDrawerOpen) updateDrawerActiveState(currentIndex);
-        }
-    }
-
-    function buildDrawerGrid() {
-        if (!drawerGrid) return;
-        drawerGrid.innerHTML = '';
-
-        slides.forEach((s, idx) => {
-            const card = document.createElement('div');
-            card.className = `grid-card ${idx === currentIndex ? 'active' : ''}`;
-            card.dataset.index = idx;
-            card.innerHTML = `
-                <img class="grid-thumb" src="${s.image}" alt="Slide ${idx + 1}" loading="lazy">
-                <div class="grid-meta">
-                    <div class="grid-meta-top">
-                        <span>SLIDE ${idx + 1}</span>
-                        <span>${s.chapter}</span>
-                    </div>
-                    <div class="grid-meta-title" title="${s.title}">${s.title}</div>
-                </div>
-            `;
-            card.addEventListener('click', () => {
-                toggleDrawer(false);
-                goToSlide(idx);
-            });
-            drawerGrid.appendChild(card);
-        });
-    }
-
-    function updateDrawerActiveState(index) {
-        if (!drawerGrid) return;
-        const cards = drawerGrid.querySelectorAll('.grid-card');
-        cards.forEach((card, idx) => {
-            if (idx === index) {
-                card.classList.add('active');
-                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            } else {
-                card.classList.remove('active');
-            }
-        });
-    }
-
     // =========================================================================
     // Event Listeners
     // =========================================================================
@@ -573,12 +497,6 @@
 
         // Keyboard Navigation
         document.addEventListener('keydown', (e) => {
-            // If drawer is open, Escape closes it
-            if (isDrawerOpen && e.key === 'Escape') {
-                toggleDrawer(false);
-                return;
-            }
-
             switch (e.key) {
                 case 'ArrowRight':
                 case ' ':
@@ -607,46 +525,21 @@
                     e.preventDefault();
                     toggleFullscreen();
                     break;
-                case 'm':
-                case 'M':
-                    e.preventDefault();
-                    toggleDrawer();
-                    break;
                 case 'Escape':
-                    if (document.fullscreenElement) {
-                        document.exitFullscreen();
+                    if (document.fullscreenElement || document.webkitFullscreenElement) {
+                        if (document.exitFullscreen) document.exitFullscreen();
+                        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
                     }
                     break;
             }
         });
 
-        // Edge Click Navigation
-        if (navPrev) navPrev.addEventListener('click', prevSlide);
-        if (navNext) navNext.addEventListener('click', nextSlide);
-        if (arrowPrev) arrowPrev.addEventListener('click', prevSlide);
-        if (arrowNext) arrowNext.addEventListener('click', nextSlide);
-
         // Fullscreen Change Listeners
         document.addEventListener('fullscreenchange', updateFullscreenIcons);
         document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
 
-        // Fullscreen & Menu Buttons
+        // Fullscreen Button
         if (fsBtn) fsBtn.addEventListener('click', toggleFullscreen);
-        if (menuBtn) menuBtn.addEventListener('click', () => toggleDrawer(true));
-        if (drawerClose) drawerClose.addEventListener('click', () => toggleDrawer(false));
-        const counterBadge = document.getElementById('counter-badge');
-        if (counterBadge) counterBadge.addEventListener('click', () => toggleDrawer(true));
-
-        // Progress Bar Scrubbing
-        if (progressTrack) {
-            progressTrack.addEventListener('click', (e) => {
-                const rect = progressTrack.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                const percent = clickX / rect.width;
-                const targetIdx = Math.floor(percent * totalSlides);
-                goToSlide(Math.max(0, Math.min(totalSlides - 1, targetIdx)));
-            });
-        }
 
         // Video Player Controls
         if (slideVideo) {
@@ -773,10 +666,8 @@
             setupVideoPlayer();
         }
 
-        updateCounter(currentIndex, false);
-        updateSlideInfoPill(currentIndex);
+        updateCounter(currentIndex);
         preloadAllImages();
-        buildDrawerGrid();
         setupEventListeners();
         setupServerLifecycle();
     }
@@ -788,7 +679,6 @@
         prev: prevSlide,
         goTo: goToSlide,
         toggleFullscreen,
-        toggleDrawer,
         getCurrentIndex: () => currentIndex,
         getTotalSlides: () => totalSlides
     };

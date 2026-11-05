@@ -61,78 +61,32 @@
         <div class="gold-ambient-sweep" id="gold-ambient"></div>
         <div class="ambient-vignette"></div>
 
-        <!-- 5. Invisible Edge Navigation Zones -->
-        <nav class="nav-zone-left" id="nav-prev" aria-label="Previous Slide"></nav>
-        <nav class="nav-zone-right" id="nav-next" aria-label="Next Slide"></nav>
-
-        <!-- Slide Title Banner (Discreet Top-Left Badge) -->
-        <header class="slide-info-pill" id="slide-info-pill">
-            <span class="pill-chapter" id="pill-chapter">Opening & Brand Identity</span>
-            <span class="pill-sep">•</span>
-            <span class="pill-title" id="pill-title">GOLD TRAINING PROGRAM</span>
-        </header>
-
-        <!-- Navigation Arrow Buttons (Hover Visible) -->
-        <button class="nav-arrow-btn nav-arrow-left" id="arrow-prev" title="Previous Slide (Left Arrow / PageUp)">
-            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <button class="nav-arrow-btn nav-arrow-right" id="arrow-next" title="Next Slide (Right Arrow / Space / PageDown)">
-            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
-
     </main>
 
-    <!-- Bottom Center Progress Bar & Counter -->
+    <!-- Bottom Center Slide Indicator (ONLY Element at Bottom) -->
     <aside class="bottom-counter-wrap" id="counter-wrap">
-        <div class="counter-progress-track" id="progress-track" title="Click to scrub slides">
-            <div class="counter-progress-fill" id="progress-fill"></div>
-        </div>
-        <div class="slide-counter-badge" id="counter-badge" title="Click to view all slides (M)">
-            <span class="brand-swarna">POTHYS SWARNA MAHAL</span>
-            <span class="badge-divider">|</span>
+        <div class="slide-counter-badge" id="counter-badge">
             <span class="curr" id="curr-num">1</span>
             <span class="sep">/</span>
             <span class="total">42</span>
         </div>
     </aside>
 
-    <!-- Top Right Controls (Fullscreen & Menu) -->
-    <div class="top-controls">
-        <button class="icon-btn" id="menuBtn" title="Slide Overview Grid (M)" aria-label="Toggle Slide Overview">
-            <svg viewBox="0 0 24 24">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
-        </button>
-        <button class="icon-btn" id="fsBtn" title="Toggle Fullscreen (F)" aria-label="Toggle Fullscreen">
-            <svg class="fs-enter-svg" id="fs-enter-icon" viewBox="0 0 24 24">
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <polyline points="9 21 3 21 3 15"></polyline>
-                <line x1="21" y1="3" x2="14" y2="10"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-            <svg class="fs-exit-svg" id="fs-exit-icon" viewBox="0 0 24 24" style="display: none;">
-                <polyline points="4 14 10 14 10 20"></polyline>
-                <polyline points="20 10 14 10 14 4"></polyline>
-                <line x1="14" y1="10" x2="21" y2="3"></line>
-                <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-        </button>
-    </div>
-
-    <!-- Slide Overview Grid Drawer (Modal) -->
-    <div class="slide-drawer" id="slide-drawer" style="display: none;">
-        <div class="drawer-header">
-            <div class="drawer-title">
-                <h2>POTHYS SWARNA MAHAL</h2>
-                <p>GOLD TRAINING PROGRAM — ALL 42 SLIDES</p>
-            </div>
-            <button class="drawer-close-btn" id="drawer-close">&times;</button>
-        </div>
-        <div class="drawer-grid" id="drawer-grid"></div>
-    </div>
+    <!-- Top-Right Fullscreen Control (ONLY Element at Top-Right) -->
+    <button class="icon-btn fs-btn" id="fsBtn" title="Toggle Fullscreen (F)" aria-label="Toggle Fullscreen">
+        <svg class="fs-enter-svg" id="fs-enter-icon" viewBox="0 0 24 24">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+        <svg class="fs-exit-svg" id="fs-exit-icon" viewBox="0 0 24 24" style="display: none;">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+    </button>
 
     <!-- Offline Vendor Libraries -->
     <script src="gsap.min.js"></script>
@@ -144,4 +98,3 @@
 
 </body>
 </html>
-
