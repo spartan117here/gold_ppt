@@ -321,7 +321,7 @@ window.SLIDES_MANIFEST = [
   },
   {
     "id": 36,
-    "image": "slides/slide_36.png",
+    "image": "slides/slide_36.jpeg",
     "title": "JEWELLERY HANDLING - HYGIENE & PREPARATION",
     "titleTamil": "நகை கையாளுதல் - தனிநபர் சுகாதாரம் மற்றும் தயாரிப்பு",
     "chapter": "Jewellery Handling SOP",
@@ -339,7 +339,7 @@ window.SLIDES_MANIFEST = [
   },
   {
     "id": 38,
-    "image": "slides/slide_38.png",
+    "image": "slides/slide_38.jpg",
     "title": "JEWELLERY HANDLING - CLEANING & MAINTENANCE",
     "titleTamil": "நகை கையாளுதல் - சுத்தம் மற்றும் பராமரிப்பு",
     "chapter": "Jewellery Handling SOP",
